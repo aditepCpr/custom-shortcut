@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เมนูทางลัดหน้าหลัก aditep.dev</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row" style="margin: 10px;margin-top: 40px;" class="d-flex justify-content-between">
+       <div  class="card-body  d-flex justify-content-between align-items-center"><div> <h4 class="col-12">เมนูทางลัดหน้าหลัก</h4>  
+        <p class="col-12" style="color:darkgray;">เลือกเมนูลัด สำหรับหน้าจอหลัก</p>  </div> <div onclick="save()" style="color: indigo;"><strong>บันทึก</strong></div></div>
+      
+
+    </div>
+    <div id="menushortcut" class="">
+
+    </div>
+    <div class="row" style="margin: 10px;margin-top:10px">
+        <h4 class="col-12">เมนูลัดอื่นๆ</h4>
+    </div>
+    <div id="etcMenu" class="">
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+
+<script>
+
+
+    new Sortable(menushortcut, {
+        animation: 250,
+        ghostClass: 'blue-background-class',
+        onEnd: async  function (/**Event*/evt) {
+            evt.newIndex // most likely why this event is used is to get the dragging element's current index
+            await checkSortable(evt)
+           
+
+        }
+   
+    });
+
+</script>
+<script>
+    var dataEtcMenu =
+        [
+            {
+                "name": "นำเข้าโค",
+                "id": "1857",
+                "img": "cow_add.png"
+            },
+            {
+                "name": "จัดการอาหาร",
+                "id": "1858",
+                "img": "cow_feed.png"
+            },
+            {
+                "name": "บันทึกน้ำนม",
+                "id": "1859",
+                "img": "cow_milk_record.png"
+            },
+            {
+                "name": "คุณภาพน้ำนม",
+                "id": "1860",
+                "img": "milk.png"
+            }
+        ]
+
+
+        var IdMyMenu = [ {
+            "id": "1857",
+           "index": "0"
+        }]
+
+ /**  var IdMyMenu = [
+     {
+            "id": "1857",
+           "index": "0"
+        },
+        {
+            "id": "1858",
+            "index": "1"
+        },  
+         {
+            "id": "1859",
+            "index": "2"
+        },
+        {
+            "id": "1860",
+            "index": "3"
+        }
+    ]  **/
+
+
+    function getDataEtcMenu() {
+        return dataEtcMenu
+    }
+async function checkSortable(evt) {
+    var index_i 
+    var consts 
+
+    // บันทึกเมื้อเลื่อน และ เลื่อน 1 ช่อง
+    for (i in IdMyMenu){
+        consts = i;
+        if (IdMyMenu[i].index ==  evt.oldIndex){
+        index_i = i
+         IdMyMenu[i].index = String(evt.newIndex)
+       }else if (Math.abs(evt.oldIndex - evt.newIndex) == 1 && IdMyMenu[i].index == evt.newIndex) {
+        IdMyMenu[i].index = String(evt.oldIndex)
+      }
+    }
+         // เลื่อนมากกว่า 1 ช่อง เลื่อนขึ้น
+      if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex > evt.newIndex && index_i != undefined) {
+        for (ii in IdMyMenu){
+
+            if (ii == index_i){
+                continue
+            }
+            if (IdMyMenu[ii].index >= evt.newIndex){
+             IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)+1)
+             if (IdMyMenu[ii].index > IdMyMenu.length){
+                IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)-1)
+             }
+            }
+        }
+      // เลื่อนมากกว่า 1 ช่อง เลื่อนลง
+      } else if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex < evt.newIndex && index_i != undefined) {
+
+        for (ii in IdMyMenu){
+
+            if (ii == index_i){
+                continue
+            }
+            if (IdMyMenu[ii].index <= evt.newIndex){
+             IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)-1)
+            }
+        }
+
+      }
+    }
+
+
+    function getIdMyMenu() {
+        return IdMyMenu
+    }
+    function addShortcut(id,) {
+        IdMyMenu.push({ "id": String(id), "index": String(IdMyMenu.length) })
+        start()
+    }
+    function removeShortcut(id) {
+
+        IdMyMenu = IdMyMenu.sort((a, b) => (a.index - b.index)).filter(vals => vals.id != id).map((val, index) => {
+            return { "id": String(val.id), "index": String(index) }
+        })
+        //  IdMyMenu = IdMyMenu.filter(vals => vals.id != id)
+        start()
+    }
+    function renderHtml(dataSet, id) {
+
+        const varElm = document.getElementById(id);
+        varElm.innerHTML = dataSet.join("")
+
+    }
+    function renderMenuEtc(dataSet) {
+        html = dataSet.map((values, index) => {
+
+            return `
+           
+            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="addShortcut(${values.id})"><div><img src="https://dairy.zyanwoa.com/contents/images/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div><img src="https://www.flaticon.com/svg/vstatic/svg/148/148764.svg?token=exp=1611340687~hmac=e8370f15f9c4bb4a83bedd97544202ff" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
+
+           
+            `
+        })
+        return html
+    }
+    function renderMyMenu(dataSet) {
+        htmlsorttab = `
+        <img src="https://www.flaticon.com/svg/vstatic/svg/1828/1828859.svg?token=exp=1611340416~hmac=3ef61e99d1cb5544938138849f76b9e7" alt="" style="width: 15px;margin: 0 auto;"> 
+        `
+        if (dataSet.length <= 1) {
+            htmlsorttab = ""
+        }
+        html = dataSet.map((values, index) => {
+
+             
+
+            return `
+            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="removeShortcut(${values.id})"><div><img src="https://dairy.zyanwoa.com/contents/images/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div>${htmlsorttab}  <img src="https://www.flaticon.com/svg/vstatic/svg/753/753345.svg?token=exp=1611339542~hmac=35134ed146651c74cbecfd3da9c75176" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
+           
+            `
+        })
+        return html
+    }
+
+    async function start() {
+        const menuData = await getDataEtcMenu()
+        const idMyMenu = await getIdMyMenu()
+        console.table(idMyMenu)
+        const idmenu = idMyMenu.map((values, index) => {
+            return values.id
+        })
+
+        const menuEtc = menuData.filter(function (values, index) {
+
+            for (x in idmenu) {
+                if (idmenu[x] === values.id)
+                    return false;
+            }
+            return true;
+        });
+
+        var sortable = [];
+        var idmenuindex ;
+        const myMenu = menuData.filter(function (values, index) {
+            for (x in idmenu) {
+                if (idmenu[x] === values.id)
+                    return true;
+            }
+            return false;
+        }).map((val,index)=>{
+            for (x in idMyMenu) {
+                if (idMyMenu[x].id === val.id)
+                idmenuindex =  idMyMenu[x].index
+            }
+            return { "id": String(val.id),"img": String(val.img) ,"name":String(val.name),"index": String(idmenuindex) }
+
+        });
+
+        html_etcMenu = renderMenuEtc(menuEtc)
+        html_myMenu = renderMyMenu(myMenu.sort((a, b) => (a.index - b.index)))
+
+        renderHtml(html_etcMenu, 'etcMenu')
+        renderHtml(html_myMenu, 'menushortcut')
+
+    }
+
+    start() 
+</script>
+
+</html>
