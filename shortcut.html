@@ -137,7 +137,7 @@
                 if (ii == index_i) {
                     continue
                 }
-                if (IdMyMenu[ii].index >= evt.newIndex) {
+                if (IdMyMenu[ii].index >= evt.newIndex && IdMyMenu[ii].index <= evt.oldIndex) {
                     IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index) + 1)
                     if (IdMyMenu[ii].index > IdMyMenu.length) {
                         IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index) - 1)
