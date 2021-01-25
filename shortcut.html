@@ -21,9 +21,14 @@
 
 <body>
     <div class="row" style="margin: 10px;margin-top: 40px;" class="d-flex justify-content-between">
-       <div  class="card-body  d-flex justify-content-between align-items-center"><div> <h4 class="col-12">เมนูทางลัดหน้าหลัก</h4>  
-        <p class="col-12" style="color:darkgray;">เลือกเมนูลัด สำหรับหน้าจอหลัก</p>  </div> <div onclick="save()" style="color: indigo;"><strong>บันทึก</strong></div></div>
-      
+        <div class="card-body  d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="col-12">เมนูทางลัดหน้าหลัก</h4>
+                <p class="col-12" style="color:darkgray;">เลือกเมนูลัด สำหรับหน้าจอหลัก</p>
+            </div>
+            <div onclick="save()" style="color: indigo;"><strong>บันทึก</strong></div>
+        </div>
+
 
     </div>
     <div id="menushortcut" class="">
@@ -47,13 +52,13 @@
     new Sortable(menushortcut, {
         animation: 250,
         ghostClass: 'blue-background-class',
-        onEnd: async  function (/**Event*/evt) {
+        onEnd: async function (/**Event*/evt) {
             evt.newIndex // most likely why this event is used is to get the dragging element's current index
             await checkSortable(evt)
-           
+
 
         }
-   
+
     });
 
 </script>
@@ -83,76 +88,77 @@
         ]
 
 
-        var IdMyMenu = [ {
-            "id": "1857",
-           "index": "0"
-        }]
+    var IdMyMenu = [{
+        "id": "1857",
+        "index": "0"
+    }]
 
- /**  var IdMyMenu = [
-     {
-            "id": "1857",
-           "index": "0"
-        },
+    /**  var IdMyMenu = [
         {
-            "id": "1858",
-            "index": "1"
-        },  
-         {
-            "id": "1859",
-            "index": "2"
-        },
-        {
-            "id": "1860",
-            "index": "3"
-        }
-    ]  **/
+               "id": "1857",
+              "index": "0"
+           },
+           {
+               "id": "1858",
+               "index": "1"
+           },  
+            {
+               "id": "1859",
+               "index": "2"
+           },
+           {
+               "id": "1860",
+               "index": "3"
+           }
+       ]  **/
 
 
     function getDataEtcMenu() {
         return dataEtcMenu
     }
-async function checkSortable(evt) {
-    var index_i 
-    var consts 
+    async function checkSortable(evt) {
+        var index_i
+        var consts
 
-    // บันทึกเมื้อเลื่อน และ เลื่อน 1 ช่อง
-    for (i in IdMyMenu){
-        consts = i;
-        if (IdMyMenu[i].index ==  evt.oldIndex){
-        index_i = i
-         IdMyMenu[i].index = String(evt.newIndex)
-       }else if (Math.abs(evt.oldIndex - evt.newIndex) == 1 && IdMyMenu[i].index == evt.newIndex) {
-        IdMyMenu[i].index = String(evt.oldIndex)
-      }
-    }
-         // เลื่อนมากกว่า 1 ช่อง เลื่อนขึ้น
-      if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex > evt.newIndex && index_i != undefined) {
-        for (ii in IdMyMenu){
-
-            if (ii == index_i){
-                continue
-            }
-            if (IdMyMenu[ii].index >= evt.newIndex){
-             IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)+1)
-             if (IdMyMenu[ii].index > IdMyMenu.length){
-                IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)-1)
-             }
+        // บันทึกเมื้อเลื่อน และ เลื่อน 1 ช่อง
+        for (i in IdMyMenu) {
+            consts = i;
+            if (IdMyMenu[i].index == evt.oldIndex) {
+                index_i = i
+                IdMyMenu[i].index = String(evt.newIndex)
+            } else if (Math.abs(evt.oldIndex - evt.newIndex) == 1 && IdMyMenu[i].index == evt.newIndex) {
+                IdMyMenu[i].index = String(evt.oldIndex)
             }
         }
-      // เลื่อนมากกว่า 1 ช่อง เลื่อนลง
-      } else if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex < evt.newIndex && index_i != undefined) {
+        // เลื่อนมากกว่า 1 ช่อง เลื่อนขึ้น
+        if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex > evt.newIndex && index_i != undefined) {
+            for (ii in IdMyMenu) {
 
-        for (ii in IdMyMenu){
+                if (ii == index_i) {
+                    continue
+                }
+                if (IdMyMenu[ii].index >= evt.newIndex) {
+                    IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index) + 1)
+                    if (IdMyMenu[ii].index > IdMyMenu.length) {
+                        IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index) - 1)
+                    }
+                }
+            }
+            // เลื่อนมากกว่า 1 ช่อง เลื่อนลง
+        } else if (Math.abs(evt.oldIndex - evt.newIndex) > 1 && evt.oldIndex < evt.newIndex && index_i != undefined) {
 
-            if (ii == index_i){
-                continue
+            for (ii in IdMyMenu) {
+
+                if (ii == index_i) {
+                    continue
+                }
+                if (IdMyMenu[ii].index <= evt.newIndex && IdMyMenu[ii].index != 0) {
+                    IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index) - 1)
+                }
             }
-            if (IdMyMenu[ii].index <= evt.newIndex){
-             IdMyMenu[ii].index = String(parseInt(IdMyMenu[ii].index)-1)
-            }
+
         }
-
-      }
+        console.table(IdMyMenu)
     }
 
 
@@ -182,7 +188,7 @@ async function checkSortable(evt) {
 
             return `
            
-            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="addShortcut(${values.id})"><div><img src="https://dairy.zyanwoa.com/contents/images/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div><img src="https://www.flaticon.com/svg/vstatic/svg/148/148764.svg?token=exp=1611340687~hmac=e8370f15f9c4bb4a83bedd97544202ff" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
+            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="addShortcut(${values.id})"><div><img src="/icon/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div><img src="/icon/add.png" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
 
            
             `
@@ -191,31 +197,24 @@ async function checkSortable(evt) {
     }
     function renderMyMenu(dataSet) {
         htmlsorttab = `
-        <img src="https://www.flaticon.com/svg/vstatic/svg/1828/1828859.svg?token=exp=1611340416~hmac=3ef61e99d1cb5544938138849f76b9e7" alt="" style="width: 15px;margin: 0 auto;"> 
+        <img src="/icon/hamburger.png" alt="" style="width: 10px;margin: 0 auto;"> 
         `
         if (dataSet.length <= 1) {
             htmlsorttab = ""
         }
         html = dataSet.map((values, index) => {
 
-             
+
 
             return `
-            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="removeShortcut(${values.id})"><div><img src="https://dairy.zyanwoa.com/contents/images/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div>${htmlsorttab}  <img src="https://www.flaticon.com/svg/vstatic/svg/753/753345.svg?token=exp=1611339542~hmac=35134ed146651c74cbecfd3da9c75176" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
+            <div class="card-body  d-flex justify-content-between align-items-center" id="${values.id}" onclick="removeShortcut(${values.id})"><div><img src="/icon/${values.img}" alt="" style="width: 40px;margin: 0 auto;">      ${values.name}</div> <div>${htmlsorttab}  <img src="/icon/cancel.png" alt="" style="width: 20px;margin: 0 auto;"> </div></div>
            
             `
         })
         return html
     }
 
-    async function start() {
-        const menuData = await getDataEtcMenu()
-        const idMyMenu = await getIdMyMenu()
-        console.table(idMyMenu)
-        const idmenu = idMyMenu.map((values, index) => {
-            return values.id
-        })
-
+    function menuDatafilter(menuData, idmenu) {
         const menuEtc = menuData.filter(function (values, index) {
 
             for (x in idmenu) {
@@ -225,25 +224,61 @@ async function checkSortable(evt) {
             return true;
         });
 
-        var sortable = [];
-        var idmenuindex ;
+        return menuEtc
+    }
+
+    function menuEtcfilter(menuData, idmenu) {
+        const menuEtc = menuData.filter(function (values, index) {
+
+            for (x in idmenu) {
+                if (idmenu[x] === values.id)
+                    return false;
+            }
+            return true;
+        });
+
+        return menuEtc
+    }
+    function myMenuDatafilter(menuData, idMyMenu, idmenu) {
         const myMenu = menuData.filter(function (values, index) {
             for (x in idmenu) {
                 if (idmenu[x] === values.id)
                     return true;
             }
             return false;
-        }).map((val,index)=>{
+        }).map((val, index) => {
             for (x in idMyMenu) {
                 if (idMyMenu[x].id === val.id)
-                idmenuindex =  idMyMenu[x].index
+                    idmenuindex = idMyMenu[x].index
             }
-            return { "id": String(val.id),"img": String(val.img) ,"name":String(val.name),"index": String(idmenuindex) }
+            return { "id": String(val.id), "img": String(val.img), "name": String(val.name), "index": String(idmenuindex) }
 
         });
 
+        return myMenu
+
+    }
+
+    async function start() {
+        var idmenuindex;
+
+
+        const menuData = await getDataEtcMenu()
+        const idMyMenu = await getIdMyMenu()
+
+        const idmenu = idMyMenu.map((values, index) => {
+            return values.id
+        })
+
+
+        const menuEtc = menuEtcfilter(menuData, idmenu)
+        const myMenu = myMenuDatafilter(menuData, idMyMenu, idmenu)
+
+
+
         html_etcMenu = renderMenuEtc(menuEtc)
         html_myMenu = renderMyMenu(myMenu.sort((a, b) => (a.index - b.index)))
+
 
         renderHtml(html_etcMenu, 'etcMenu')
         renderHtml(html_myMenu, 'menushortcut')
